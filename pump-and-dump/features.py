@@ -162,9 +162,9 @@ def build_features(file, coin, time_freq, rolling_freq, index):
          })
     results_df['symbol'] = coin
     
-    for i in range(results_df.shape[0]):
-        if results_df['gt'].iloc[i] == 2:
-            results_df['gt'].iloc[i] = 1
+    #for i in range(results_df.shape[0]):
+    #    if results_df['gt'].iloc[i] == 2:
+    #        results_df['gt'].iloc[i] = 1
     results_df.replace(np.inf, np.nan, inplace=True)
 
     return results_df.dropna()
@@ -197,14 +197,11 @@ def build_features_multi(time_freq, rolling_freq):
 def compute_features():
     # time step and time window
     # 4h cause curve shifting applied in costruction phase for dataset
-    # window of elements considered (24 (1day), 168 (1 week), 720 (1 month))
+    # window of elements considered (24 (1day), 30, 720 (1 month))
 
-    #aggiungere 30 rolling freq
-
-    build_features_multi(time_freq='4H', rolling_freq=24)
-    build_features_multi(time_freq='4H', rolling_freq=30) #solo 
-    build_features_multi(time_freq='4H', rolling_freq=168)
-    build_features_multi(time_freq='4H', rolling_freq=720)
+    #build_features_multi(time_freq='4H', rolling_freq=24)
+    build_features_multi(time_freq='4H', rolling_freq=30)  
+    #build_features_multi(time_freq='4H', rolling_freq=720)
 
 
 def adapt_features():
