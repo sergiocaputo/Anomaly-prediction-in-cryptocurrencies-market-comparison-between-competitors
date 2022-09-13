@@ -8,8 +8,8 @@ from datetime import datetime
 
 from collections import Counter
 
-path_original = 'autoencoder_dataset/original/*.csv'
-path_adapted = 'autoencoder_dataset/adapted/*.csv'
+path_original = 'pump-and-dump/autoencoder_dataset/original/*.csv'
+path_adapted = 'pump-and-dump/autoencoder_dataset/adapted/*.csv'
 
 
 def std_rush_order_feature(df_buy, time_freq, rolling_freq):
@@ -99,6 +99,15 @@ def avg_price_max(df_buy_rolling, rolling_freq):
     return results
 
 
+def avg_price_min(df_buy_rolling, rolling_freq):
+    buy_volume = df_buy_rolling['price'].min()
+    buy_volume.dropna(inplace=True)
+    rolling_diff = buy_volume.rolling(window=rolling_freq).mean()
+    results = rolling_diff.pct_change()
+    #print(len(results))
+    return results
+
+
 def chunks_time(df_buy_rolling):
     # compute any kind of aggregation
     buy_volume = df_buy_rolling['price'].max()
@@ -144,6 +153,7 @@ def build_features(file, coin, time_freq, rolling_freq, index):
          'std_price': std_price_feature(df_buy_grouped, rolling_freq).values,
          'avg_price': avg_price_feature(df_buy_grouped, rolling_freq).values,
          'avg_price_max': avg_price_max(df_buy_grouped, rolling_freq).values,
+         'avg_price_min': avg_price_min(df_buy_grouped, rolling_freq).values,
          'hour_sin': np.sin(2 * np.pi * date.hour/23),
          'hour_cos': np.cos(2 * np.pi * date.hour/23),
          'minute_sin': np.sin(2 * np.pi * date.minute / 59),
@@ -168,8 +178,8 @@ def build_features_multi(time_freq, rolling_freq):
     all_results_df = pd.DataFrame()
     count = 0
 
-    if not os.path.exists('features/adapted_features'):
-                os.makedirs('features/adapted_features')
+    if not os.path.exists('pump-and-dump/features/adapted_features'):
+                os.makedirs('pump-and-dump/features/adapted_features')
                 
     for f in files:
         print(f, time_freq, rolling_freq)
@@ -177,11 +187,11 @@ def build_features_multi(time_freq, rolling_freq):
 
         results_df = build_features(f, coin, time_freq, rolling_freq, count)
         
-        results_df.to_csv('features/adapted_features/{}_{}_{}.csv'.format(coin, time_freq, rolling_freq), index=False, float_format='%.3f')
+        results_df.to_csv('pump-and-dump/features/adapted_features/{}_{}_{}.csv'.format(coin, time_freq, rolling_freq), index=False, float_format='%.3f')
         all_results_df = pd.concat([all_results_df, results_df])
         count += 1
 
-    all_results_df.to_csv('features/adapted_features/all_{}_{}.csv'.format(time_freq, rolling_freq), index=False, float_format='%.3f')
+    all_results_df.to_csv('pump-and-dump/features/adapted_features/all_{}_{}.csv'.format(time_freq, rolling_freq), index=False, float_format='%.3f')
 
 
 def compute_features():
@@ -207,8 +217,8 @@ def adapt_features():
 
     features = ["symbol","timestamp","datetime","side","price","amount","btc_volume","gt"]
 
-    if not os.path.exists('autoencoder_dataset/adapted'):
-                os.makedirs('autoencoder_dataset/adapted')
+    if not os.path.exists('pump-and-dump/autoencoder_dataset/adapted'):
+                os.makedirs('pump-and-dump/autoencoder_dataset/adapted')
 
     for f in files:
         print(f)
@@ -225,7 +235,7 @@ def adapt_features():
         df['side'] = 'buy'
         
         df = df[features]
-        df.to_csv('autoencoder_dataset/adapted/{}.csv'.format(crypto), index=False)
+        df.to_csv('pump-and-dump/autoencoder_dataset/adapted/{}.csv'.format(crypto), index=False)
     
 
 

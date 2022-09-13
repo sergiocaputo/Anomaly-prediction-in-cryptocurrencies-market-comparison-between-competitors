@@ -10,7 +10,7 @@ from sklearn.model_selection import StratifiedKFold, cross_val_predict
 from sklearn.tree import DecisionTreeClassifier
 import joblib
 
-features_path = 'features/adapted_features/*csv'
+features_path = 'pump-and-dump/features/adapted_features/*csv'
 
 one_month_start = "2021-11-01 00:00:00"
 three_month_start = "2021-09-01 00:00:00"
@@ -45,10 +45,10 @@ def train_random_forest(X_train, Y_train, X_test, Y_test, file, crypto, type):
                 'precision' : [precision_score(Y_test, Y_predictions, average='macro')],
                 'F1 score': [f1_score(Y_test, Y_predictions, average='macro')]}
 
-    if not os.path.exists('results/random_forest/'+ crypto + '/' + type):
-        os.makedirs('results/random_forest/'+ crypto + '/' + type)
+    if not os.path.exists('pump-and-dump/results/random_forest/'+ crypto + '/' + type):
+        os.makedirs('pump-and-dump/results/random_forest/'+ crypto + '/' + type)
             
-    filename = 'results/random_forest/'+ crypto + '/' + type + '/' + os.path.splitext(os.path.basename(file))[0] + '.h5'
+    filename = 'pump-and-dump/results/random_forest/'+ crypto + '/' + type + '/' + os.path.splitext(os.path.basename(file))[0] + '.h5'
     print(filename)
     joblib.dump(clf, filename)
 
@@ -68,10 +68,10 @@ def train_ada_boost(X_train, Y_train, X_test, Y_test, file, crypto, type):
                 'precision' : [precision_score(Y_test, Y_predictions, average='macro')],
                 'F1 score': [f1_score(Y_test, Y_predictions, average='macro')]}
 
-    if not os.path.exists('results/ada_boost/'+ crypto + '/' + type):
-        os.makedirs('results/ada_boost/'+ crypto + '/' + type)
+    if not os.path.exists('pump-and-dump/results/ada_boost/'+ crypto + '/' + type):
+        os.makedirs('pump-and-dump/results/ada_boost/'+ crypto + '/' + type)
 
-    filename = 'results/ada_boost/'+ crypto + '/' + type + '/' + os.path.splitext(os.path.basename(file))[0] + '.h5'
+    filename = 'pump-and-dump/results/ada_boost/'+ crypto + '/' + type + '/' + os.path.splitext(os.path.basename(file))[0] + '.h5'
     print(filename)
     joblib.dump(clf, filename)
 
@@ -88,12 +88,13 @@ def classifier(time_freq):
                 'std_price',
                 'avg_price',
                 'avg_price_max',
+                'avg_price_min',
                 'hour_sin',
                 'hour_cos',
                 'minute_sin',
                 'minute_cos']
 
-    cryptos = list(os.listdir('autoencoder_dataset/adapted'))
+    cryptos = list(os.listdir('pump-and-dump/autoencoder_dataset/adapted'))
     #cryptos = list(set([((os.path.splitext(i)[0].split('_')[0])) for i in os.listdir('features/adapted_features')]))
     cryptos.append('all')
 
@@ -116,7 +117,7 @@ def classifier(time_freq):
         for rolling_freq in [24, 30, 
         #168, 
         720]:
-            file = 'features/adapted_features/' + crypto + "_" + time_freq + "_" + str(rolling_freq) +'.csv'
+            file = 'pump-and-dump/features/adapted_features/' + crypto + "_" + time_freq + "_" + str(rolling_freq) +'.csv'
             print(file)
             computed_data = pd.read_csv(file, parse_dates=['date'])
 
@@ -156,15 +157,15 @@ def classifier(time_freq):
             two_year_results_ada = pd.concat([two_year_results_ada, results])
 
 
-        one_month_results_rf.to_csv('results/one_month_rf.csv', index=False, float_format='%.3f')
-        three_month_results_rf.to_csv('results/three_months_rf.csv', index=False, float_format='%.3f')
-        six_month_results_rf.to_csv('results/six_months_rf.csv', index=False, float_format='%.3f')
-        two_year_results_rf.to_csv('results/two_years_rf.csv', index=False, float_format='%.3f')
+        one_month_results_rf.to_csv('pump-and-dump/results/one_month_rf.csv', index=False, float_format='%.3f')
+        three_month_results_rf.to_csv('pump-and-dump/results/three_months_rf.csv', index=False, float_format='%.3f')
+        six_month_results_rf.to_csv('pump-and-dump/results/six_months_rf.csv', index=False, float_format='%.3f')
+        two_year_results_rf.to_csv('pump-and-dump/results/two_years_rf.csv', index=False, float_format='%.3f')
 
-        one_month_results_ada.to_csv('results/one_month_ada.csv', index=False, float_format='%.3f')
-        three_month_results_ada.to_csv('results/three_months_ada.csv', index=False, float_format='%.3f')
-        six_month_results_ada.to_csv('results/six_months_ada.csv', index=False, float_format='%.3f')
-        two_year_results_ada.to_csv('results/two_years_ada.csv', index=False, float_format='%.3f')
+        one_month_results_ada.to_csv('pump-and-dump/results/one_month_ada.csv', index=False, float_format='%.3f')
+        three_month_results_ada.to_csv('pump-and-dump/results/three_months_ada.csv', index=False, float_format='%.3f')
+        six_month_results_ada.to_csv('pump-and-dump/results/six_months_ada.csv', index=False, float_format='%.3f')
+        two_year_results_ada.to_csv('pump-and-dump/results/two_years_ada.csv', index=False, float_format='%.3f')
 
 
 if __name__ == '__main__':
