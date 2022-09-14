@@ -10,8 +10,8 @@ from collections import Counter
 
 from sklearn.preprocessing import MinMaxScaler
 
-path_original = 'autoencoder_dataset/original/*.csv'
-path_adapted = 'autoencoder_dataset/adapted/*.csv'
+path_original = 'ELM-AD/autoencoder_dataset/original/*.csv'
+path_adapted = 'ELM-AD/autoencoder_dataset/adapted/*.csv'
 features = ["symbol","Date","Open Price","High Price","Low Price","Close Price","Volume",
                 "WAP","No.of Shares","No. of Trades","Total Turnover (Rs.)","Deliverable Quantity","% Deli. Qty to Traded Qty",
                 "Spread High-Low","Spread Close-Open","Ch(t) Open Price","SMA Open Price","Ch(t) High Price","SMA High Price","Ch(t) Low Price",
@@ -33,8 +33,8 @@ def adapt_features():
     #sma sum (n close val)/n *100  n = 2 giorni
 
 
-    if not os.path.exists('autoencoder_dataset/adapted'):
-                os.makedirs('autoencoder_dataset/adapted')
+    if not os.path.exists('ELM-AD/autoencoder_dataset/adapted'):
+                os.makedirs('ELM-AD/autoencoder_dataset/adapted')
 
     for f in files:
         print(f)
@@ -87,7 +87,7 @@ def adapt_features():
         df['% Deli. Qty to Traded Qty'] = 0
 
         df = df[features]
-        df.to_csv('autoencoder_dataset/adapted/{}.csv'.format(crypto), index=False)
+        df.to_csv('ELM-AD/autoencoder_dataset/adapted/{}.csv'.format(crypto), index=False)
     
 
 def preprocessing():
@@ -106,11 +106,11 @@ def preprocessing():
                 normalized = scaler.fit_transform(df[col].values.reshape(-1, 1))
                 df[col] = pd.Series(normalized.reshape(-1))
 
-        for i in range(df.shape[0]):
-            if df.loc[i, 'Label'] == 2:
-                df.loc[i, 'Label'] = 1
+        #for i in range(df.shape[0]):
+        #    if df.loc[i, 'Label'] == 2:
+        #        df.loc[i, 'Label'] = 1
 
-        df.to_csv('autoencoder_dataset/adapted/{}.csv'.format(crypto), index=False)
+        df.to_csv('ELM-AD/autoencoder_dataset/adapted/{}.csv'.format(crypto), index=False)
     
 
 if __name__ == '__main__':

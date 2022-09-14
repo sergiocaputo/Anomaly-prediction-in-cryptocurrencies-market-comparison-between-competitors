@@ -33,10 +33,13 @@ def define_prediction_class(results):
         if r < float(0.5):
             y.append(0)
         else:
-            y.append(1)
+            if r <= float(1.5):
+                y.append(1)
+            else:
+                y.append(2)
     return y
 
-def train_ELM(crypto, X_train, Y_train, X_test, Y_test, type, num_classes = 2, num_hidden_layers = 512, input_length = 20, complete_features = 'yes'):
+def train_ELM(crypto, X_train, Y_train, X_test, Y_test, type, num_classes = 3, num_hidden_layers = 512, input_length = 20, complete_features = 'yes'):
     model = ELM(input_length, num_hidden_layers, num_classes)
     model.fit(X_train, Y_train, display_time=True)
     Y_predictions = model.predict(X_test)
@@ -51,20 +54,20 @@ def train_ELM(crypto, X_train, Y_train, X_test, Y_test, type, num_classes = 2, n
                 'F1 score': [f1_score(Y_test, Y_predictions, average='macro')]} 
 
     if complete_features == 'yes':
-        if not os.path.exists('results/all_features/'+ crypto + '/' + type):
-            os.makedirs('results/all_features/'+ crypto + '/' + type)
-        filename = 'results/all_features/'+ crypto + '/' + type + '/' + 'ELM_' + crypto + '_' + type + '.h5'
+        if not os.path.exists('ELM-AD/results/all_features/'+ crypto + '/' + type):
+            os.makedirs('ELM-AD/results/all_features/'+ crypto + '/' + type)
+        filename = 'ELM-AD/results/all_features/'+ crypto + '/' + type + '/' + 'ELM_' + crypto + '_' + type + '.h5'
     else:
-        if not os.path.exists('results/reduced_features/'+ crypto + '/' + type):
-            os.makedirs('results/reduced_features/'+ crypto + '/' + type)
-        filename = 'results/reduced_features/'+ crypto + '/' + type + '/' + 'ELM_' + crypto + '_' + type + '.h5'
+        if not os.path.exists('ELM-AD/results/reduced_features/'+ crypto + '/' + type):
+            os.makedirs('ELM-AD/results/reduced_features/'+ crypto + '/' + type)
+        filename = 'ELM-AD/results/reduced_features/'+ crypto + '/' + type + '/' + 'ELM_' + crypto + '_' + type + '.h5'
 
     print(filename)
     joblib.dump(model, filename)
     return pd.DataFrame(results)
 
 def train_reduced_features_set():
-    cryptos = list(os.listdir('autoencoder_dataset/adapted'))
+    cryptos = list(os.listdir('ELM-AD/autoencoder_dataset/adapted'))
 
     one_month_results_reduced = pd.DataFrame()
     three_month_results_reduced = pd.DataFrame()
@@ -82,7 +85,7 @@ def train_reduced_features_set():
     for c in cryptos:
         crypto = os.path.splitext(os.path.basename(c))[0]
         print(crypto)
-        data = 'autoencoder_dataset/adapted/' + crypto +'.csv'
+        data = 'ELM-AD/autoencoder_dataset/adapted/' + crypto +'.csv'
 
         computed_data = pd.read_csv(data, parse_dates=['Date'])
         
@@ -106,14 +109,14 @@ def train_reduced_features_set():
         results = train_ELM(crypto, X_train_2y, Y_train_2y, X_test, Y_test, input_length=16, type='two_years', complete_features='no')
         two_year_results_reduced = pd.concat([two_year_results_reduced, results])
 
-    one_month_results_reduced.to_csv('results/reduced_features/one_month.csv', index=False, float_format='%.3f')
-    three_month_results_reduced.to_csv('results/reduced_features/three_months.csv', index=False, float_format='%.3f')
-    six_month_results_reduced.to_csv('results/reduced_features/six_months.csv', index=False, float_format='%.3f')
-    two_year_results_reduced.to_csv('results/reduced_features/two_years.csv', index=False, float_format='%.3f')
+    one_month_results_reduced.to_csv('ELM-AD/results/reduced_features/one_month.csv', index=False, float_format='%.3f')
+    three_month_results_reduced.to_csv('ELM-AD/results/reduced_features/three_months.csv', index=False, float_format='%.3f')
+    six_month_results_reduced.to_csv('ELM-AD/results/reduced_features/six_months.csv', index=False, float_format='%.3f')
+    two_year_results_reduced.to_csv('ELM-AD/results/reduced_features/two_years.csv', index=False, float_format='%.3f')
 
 
 def train_complete_features_set():
-    cryptos = list(os.listdir('autoencoder_dataset/adapted'))
+    cryptos = list(os.listdir('ELM-AD/autoencoder_dataset/adapted'))
            
     one_month_results_complete = pd.DataFrame()
     three_month_results_complete = pd.DataFrame()
@@ -129,7 +132,7 @@ def train_complete_features_set():
     for c in cryptos:
         crypto = os.path.splitext(os.path.basename(c))[0]
         print(crypto)
-        data = 'autoencoder_dataset/adapted/' + crypto +'.csv'
+        data = 'ELM-AD/autoencoder_dataset/adapted/' + crypto +'.csv'
 
         computed_data = pd.read_csv(data, parse_dates=['Date'])
         
@@ -153,10 +156,10 @@ def train_complete_features_set():
         results = train_ELM(crypto, X_train_2y, Y_train_2y, X_test, Y_test, type='two_years')
         two_year_results_complete = pd.concat([two_year_results_complete, results])
 
-    one_month_results_complete.to_csv('results/all_features/one_month.csv', index=False, float_format='%.3f')
-    three_month_results_complete.to_csv('results/all_features/three_months.csv', index=False, float_format='%.3f')
-    six_month_results_complete.to_csv('results/all_features/six_months.csv', index=False, float_format='%.3f')
-    two_year_results_complete.to_csv('results/all_features/two_years.csv', index=False, float_format='%.3f')
+    one_month_results_complete.to_csv('ELM-AD/results/all_features/one_month.csv', index=False, float_format='%.3f')
+    three_month_results_complete.to_csv('ELM-AD/results/all_features/three_months.csv', index=False, float_format='%.3f')
+    six_month_results_complete.to_csv('ELM-AD/results/all_features/six_months.csv', index=False, float_format='%.3f')
+    two_year_results_complete.to_csv('ELM-AD/results/all_features/two_years.csv', index=False, float_format='%.3f')
 
 
 if __name__ == '__main__':

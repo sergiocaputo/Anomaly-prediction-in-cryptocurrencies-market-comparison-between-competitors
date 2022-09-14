@@ -1,5 +1,6 @@
 import numpy as np
 import time
+from numpy import exp
 
 
 def _mean_squared_error(y, pred):
@@ -25,12 +26,16 @@ def _hardlimit(x):
 def _identity(x):
     return x
 
+def _softmax(x):
+	e = exp(x)
+	return e / e.sum()
 
 def getActivation(name):
     return {
         'sigmoid': _sigmoid,
         'fourier': _fourier,
-        'hardlimit': _hardlimit
+        'hardlimit': _hardlimit,
+        'softmax': _softmax
     }[name]
 
 
@@ -42,7 +47,7 @@ def getLoss(name):
 
 
 class ELM:
-    def __init__(self, num_input_nodes, num_hidden_units, num_out_units, activation='sigmoid',
+    def __init__(self, num_input_nodes, num_hidden_units, num_out_units, activation='softmax',
                  loss='mse', beta_init=None, w_init=None, bias_init=None):
         self._num_input_nodes = num_input_nodes
         self._num_hidden_units = num_hidden_units
