@@ -26,13 +26,6 @@ def adapt_features():
     "RSI_26","RSI_13","RSI_30","RSI_20","RSI_50","RSI_100","RSI_200","MACD_12_26_9","MACDH_12_26_9","MACDS_12_26_9","BBL_20","BBM_20",
     "BBU_20","MOM","STOCHF_14","STOCHF_3","STOCH_5","STOCH_3","CMO","DPO","UO","lag_1"]
 
-    # wap media chiusura in 24 h
-    # spread high low = high price - low price
-    #spread close open
-    #ch(t) open = roc_since_open = (close_price - self.open_price) / self.open_price *100 in 2 hours
-    #sma sum (n close val)/n *100  n = 2 giorni
-
-
     if not os.path.exists('ELM-AD/autoencoder_dataset/adapted'):
                 os.makedirs('ELM-AD/autoencoder_dataset/adapted')
 
@@ -92,9 +85,9 @@ def adapt_features():
 
 def preprocessing():
     files = glob.glob(path_adapted)
-    features_to_normalize = ['WAP', 'SMA Open Price','SMA High Price','SMA Low Price','SMA Close Price','Spread High-Low','Spread Close-Open',
-                             'Ch(t) Open Price','Ch(t) High Price','Ch(t) Low Price','Ch(t) Close Price']
-    
+    features_to_normalize = ['Open Price','High Price','Low Price','Close Price','WAP', 'SMA Open Price','SMA High Price','SMA Low Price','SMA Close Price',
+                             'Spread High-Low','Spread Close-Open', 'Ch(t) Open Price','Ch(t) High Price','Ch(t) Low Price','Ch(t) Close Price','Volume']
+
     for f in files:
         print(f)
         crypto = os.path.splitext(os.path.basename(f))[0]
@@ -103,8 +96,8 @@ def preprocessing():
         scaler = MinMaxScaler()
         for col in df.columns:
             if col in features_to_normalize:
-                normalized = scaler.fit_transform(df[col].values.reshape(-1, 1))
-                df[col] = pd.Series(normalized.reshape(-1))
+                normalized = scaler.fit_transform(df[col].values.reshape(-1, 1)) #col vector
+                df[col] = pd.Series(normalized.reshape(-1)) #row vector
 
         #for i in range(df.shape[0]):
         #    if df.loc[i, 'Label'] == 2:
