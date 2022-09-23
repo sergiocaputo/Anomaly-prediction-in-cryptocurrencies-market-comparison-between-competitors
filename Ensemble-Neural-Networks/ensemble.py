@@ -109,7 +109,7 @@ def train_ensamble(models_path, n_members, crypto, X_train, Y_train, X_test, Y_t
     return pd.DataFrame(results)
 
 def train_ensamble_reduced_features_set():
-    cryptos = list(os.listdir('results/submodels/reduced_features'))
+    cryptos = list(os.listdir('Ensemble-Neural-Networks/results/submodels/reduced_features'))
     n_members = 5
 
     one_month_results_reduced = pd.DataFrame()
@@ -128,8 +128,8 @@ def train_ensamble_reduced_features_set():
     for c in cryptos:
         crypto = os.path.splitext(os.path.basename(c))[0]
         print(crypto)
-        data = 'autoencoder_dataset/adapted/' + crypto +'.csv'
-        models_path = 'results/submodels/reduced_features/' + crypto
+        data = 'Ensemble-Neural-Networks/autoencoder_dataset/adapted/' + crypto +'.csv'
+        models_path = 'Ensemble-Neural-Networks/results/submodels/reduced_features/' + crypto
 
         computed_data = pd.read_csv(data, parse_dates=['Date'])
         
@@ -158,14 +158,14 @@ def train_ensamble_reduced_features_set():
         two_year_results_reduced = pd.concat([two_year_results_reduced, results])
 
 
-    one_month_results_reduced.to_csv('results/submodels/reduced_features/one_month.csv', index=False, float_format='%.3f')
-    three_month_results_reduced.to_csv('results/submodels/reduced_features/three_months.csv', index=False, float_format='%.3f')
-    six_month_results_reduced.to_csv('results/submodels/reduced_features/six_months.csv', index=False, float_format='%.3f')
-    two_year_results_reduced.to_csv('results/submodels/reduced_features/two_years.csv', index=False, float_format='%.3f')
+    one_month_results_reduced.to_csv('Ensemble-Neural-Networks/results/submodels/reduced_features/one_month.csv', index=False, float_format='%.3f')
+    three_month_results_reduced.to_csv('Ensemble-Neural-Networks/results/submodels/reduced_features/three_months.csv', index=False, float_format='%.3f')
+    six_month_results_reduced.to_csv('Ensemble-Neural-Networks/results/submodels/reduced_features/six_months.csv', index=False, float_format='%.3f')
+    two_year_results_reduced.to_csv('Ensemble-Neural-Networks/results/submodels/reduced_features/two_years.csv', index=False, float_format='%.3f')
 
 
 def train_ensamble_complete_features_set():
-    cryptos = list(os.listdir('results/submodels/all_features'))
+    cryptos = list(os.listdir('Ensemble-Neural-Networks/results/submodels/all_features'))
     n_members = 5
 
     one_month_results_complete = pd.DataFrame()
@@ -182,8 +182,8 @@ def train_ensamble_complete_features_set():
     for c in cryptos:
         crypto = os.path.splitext(os.path.basename(c))[0]
         print(crypto)
-        data = 'autoencoder_dataset/adapted/' + crypto +'.csv'
-        models_path = 'results/submodels/all_features/' + crypto
+        data = 'Ensemble-Neural-Networks/autoencoder_dataset/adapted/' + crypto +'.csv'
+        models_path = 'Ensemble-Neural-Networks/results/submodels/all_features/' + crypto
 
         computed_data = pd.read_csv(data, parse_dates=['Date'])
         
@@ -212,10 +212,10 @@ def train_ensamble_complete_features_set():
         two_year_results_complete = pd.concat([two_year_results_complete, results])
 
 
-    one_month_results_complete.to_csv('results/submodels/all_features/one_month.csv', index=False, float_format='%.3f')
-    three_month_results_complete.to_csv('results/submodels/all_features/three_months.csv', index=False, float_format='%.3f')
-    six_month_results_complete.to_csv('results/submodels/all_features/six_months.csv', index=False, float_format='%.3f')
-    two_year_results_complete.to_csv('results/submodels/all_features/two_years.csv', index=False, float_format='%.3f')
+    one_month_results_complete.to_csv('Ensemble-Neural-Networks/results/submodels/all_features/one_month.csv', index=False, float_format='%.3f')
+    three_month_results_complete.to_csv('Ensemble-Neural-Networks/results/submodels/all_features/three_months.csv', index=False, float_format='%.3f')
+    six_month_results_complete.to_csv('Ensemble-Neural-Networks/results/submodels/all_features/six_months.csv', index=False, float_format='%.3f')
+    two_year_results_complete.to_csv('Ensemble-Neural-Networks/results/submodels/all_features/two_years.csv', index=False, float_format='%.3f')
 
 
 if __name__ == '__main__':

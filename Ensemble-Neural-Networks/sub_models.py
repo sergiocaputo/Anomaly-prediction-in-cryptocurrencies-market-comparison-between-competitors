@@ -79,13 +79,13 @@ def train_sub_models(X_train, Y_train, crypto, type, complete_features='yes'):
 
         # save model
         if complete_features == 'yes':
-            if not os.path.exists('results/submodels/all_features/'+ crypto + '/' + type):
-                os.makedirs('results/submodels/all_features/'+ crypto + '/' + type)
-            filename = 'results/submodels/all_features/'+ crypto + '/' + type + '/' + str(i + 1) + '.h5'
+            if not os.path.exists('Ensemble-Neural-Networks/results/submodels/all_features/'+ crypto + '/' + type):
+                os.makedirs('Ensemble-Neural-Networks/results/submodels/all_features/'+ crypto + '/' + type)
+            filename = 'Ensemble-Neural-Networks/results/submodels/all_features/'+ crypto + '/' + type + '/' + str(i + 1) + '.h5'
         else:
-            if not os.path.exists('results/submodels/reduced_features/'+ crypto + '/' + type):
-                os.makedirs('results/submodels/reduced_features/'+ crypto + '/' + type)
-            filename = 'results/submodels/reduced_features/'+ crypto + '/' + type + '/' + str(i + 1) + '.h5'
+            if not os.path.exists('Ensemble-Neural-Networks/results/submodels/reduced_features/'+ crypto + '/' + type):
+                os.makedirs('Ensemble-Neural-Networks/results/submodels/reduced_features/'+ crypto + '/' + type)
+            filename = 'Ensemble-Neural-Networks/results/submodels/reduced_features/'+ crypto + '/' + type + '/' + str(i + 1) + '.h5'
 
         model.save(filename)
 
@@ -95,7 +95,7 @@ def train_sub_models(X_train, Y_train, crypto, type, complete_features='yes'):
 
 
 def train_complete_features():
-    cryptos = list(os.listdir('autoencoder_dataset/adapted'))
+    cryptos = list(os.listdir('Ensemble-Neural-Networks/autoencoder_dataset/adapted'))
 
     # models with features 'No.of Shares','No. of Trades','Total Turnover (Rs.)','Deliverable Quantity','% Deli. Qty to Traded Qty' = 0
 
@@ -108,7 +108,7 @@ def train_complete_features():
     for c in cryptos:
         crypto = os.path.splitext(os.path.basename(c))[0]
         print(crypto)
-        file = 'autoencoder_dataset/adapted/' + crypto +'.csv'
+        file = 'Ensemble-Neural-Networks/autoencoder_dataset/adapted/' + crypto +'.csv'
 
         computed_data = pd.read_csv(file, parse_dates=['Date'])
         
@@ -130,7 +130,7 @@ def train_complete_features():
 
 
 def train_reduced_features_set():
-    cryptos = list(os.listdir('autoencoder_dataset/adapted'))
+    cryptos = list(os.listdir('Ensemble-Neural-Networks/autoencoder_dataset/adapted'))
 
     # models with features 'No.of Shares','No. of Trades','Total Turnover (Rs.)','Deliverable Quantity','% Deli. Qty to Traded Qty' removed
     # added 'Volume' feature
@@ -143,7 +143,7 @@ def train_reduced_features_set():
     for c in cryptos:
         crypto = os.path.splitext(os.path.basename(c))[0]
         print(crypto)
-        file = 'autoencoder_dataset/adapted/' + crypto +'.csv'
+        file = 'Ensemble-Neural-Networks/autoencoder_dataset/adapted/' + crypto +'.csv'
 
         computed_data = pd.read_csv(file, parse_dates=['Date'])
         
